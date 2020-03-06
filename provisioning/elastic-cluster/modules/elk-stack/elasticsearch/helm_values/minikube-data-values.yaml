@@ -1,0 +1,34 @@
+---
+# Permit co-located instances for solitary minikube virtual machines.
+antiAffinity: "soft"
+
+# Shrink default JVM heap.
+esJavaOpts: "-Xmx256m -Xms256m"
+
+# es config customizations
+esConfig:
+  elasticsearch.yml: |
+    path.data: /usr/share/elasticsearch/data
+    xpack.monitoring.collection.enabled: true
+
+# Allocate smaller chunks of memory per pod.
+resources:
+  requests:
+    cpu: "100m"
+    memory: "512M"
+  limits:
+    cpu: "1000m"
+    memory: "1G"
+
+roles:
+  master: "false"
+  ingest: "true"
+  data: "true"
+
+# Request smaller persistent volumes.
+volumeClaimTemplate:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "elk-standard"
+  resources:
+    requests:
+      storage: 100M
